@@ -85,6 +85,41 @@ func dispatchCoin() int {
 	fmt.Printf("总共使用的金币数为%v", result)
 	return coins - result
 }
+func f1() int {
+	x := 5
+	defer func() {
+		x++
+	}()
+	return x
+}
+
+func f2() (x int) {
+	defer func() {
+		x++
+	}()
+	return 5
+}
+
+func f3() (y int) {
+	x := 5
+	defer func() {
+		x++
+	}()
+	return x
+}
+func f4() (x int) {
+	defer func(x int) {
+		x++
+		fmt.Printf("in f4's defer, x=%v\n", x)
+	}(x)
+	return 5
+}
+func calc(index string, a, b int) int {
+	ret := a + b
+	fmt.Println(index, a, b, ret)
+	return ret
+}
+
 func main() {
 	// var s string
 	// s = "-"
@@ -97,4 +132,20 @@ func main() {
 	// fmt.Println(f(15))
 	left := dispatchCoin()
 	fmt.Println("剩下：", left)
+
+	//defer
+	fmt.Println("===start defer===")
+	fmt.Println("f1:", f1())
+	fmt.Println("f2:", f2())
+	fmt.Println("f3:", f3())
+	fmt.Println("f4:", f4())
+
+	//输出带defer的代码结果
+	fmt.Println("===输出带defer的代码结果===")
+	x := 1
+	y := 2
+	defer calc("AA", x, calc("A", x, y))
+	x = 10
+	defer calc("BB", x, calc("B", x, y))
+	y = 20
 }
